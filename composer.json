@@ -22,6 +22,7 @@
         "symfony/flex": "^2",
         "symfony/framework-bundle": "6.0.*",
         "symfony/maker-bundle": "^1.36",
+        "symfony/monolog-bundle": "^3.0",
         "symfony/proxy-manager-bridge": "6.0.*",
         "symfony/runtime": "6.0.*",
         "symfony/string": "6.0.*",
@@ -82,6 +83,9 @@
         }
     },
     "require-dev": {
-        "fakerphp/faker": "^1.19"
+        "fakerphp/faker": "^1.19",
+        "symfony/debug-bundle": "6.0.*",
+        "symfony/stopwatch": "6.0.*",
+        "symfony/web-profiler-bundle": "6.0.*"
     }
 }
