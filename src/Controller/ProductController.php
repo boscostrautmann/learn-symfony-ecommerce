@@ -13,6 +13,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\Validator\Constraints\Collection;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ProductController extends AbstractController
 {
@@ -50,8 +54,45 @@ class ProductController extends AbstractController
     }
 
     #[Route('/admin/product/{id}/edit', name: 'product_edit')]
-    public function edit($id, ProductRepository $productRepository, Request $request, EntityManagerInterface $em, UrlGeneratorInterface $urlGenerator)
+    public function edit($id, ProductRepository $productRepository, Request $request, EntityManagerInterface $em, ValidatorInterface $validator)
     {
+        // $client = [
+        //     'nom' => 'Strautmann',
+        //     'prenom' => 'Bosco',
+        //     'voiture' => [
+        //         'marque' => 'Toyota',
+        //         'couleur' => 'Bleu',
+        //     ],
+        // ];
+
+        // $collection = new Collection([
+        //     'nom' => new NotBlank(['message' => 'Le nom ne doit pas être vide']),
+        //     'prenom' => [
+        //         new NotBlank(['message' => 'Le prenom ne doit pas être vide']),
+        //         new Length(['min' => 3, 'minMessage' => 'Le prénom ne doit pas faire moins de 3 caractères']),
+        //     ],
+        //     'voiture' => new Collection([
+        //         'marque' => new NotBlank(['message' => 'La marque de la voiture est obligatoire']),
+        //         'couleur' => new NotBlank(['message' => 'La couleur de la voiture est obligatoire']),
+        //     ]),
+        // ]);
+
+        // $resultat = $validator->validate($client, $collection);
+
+        $product = new Product();
+        $product
+            ->setName('Test')
+            ->setPrice(2000)
+        ;
+
+        $resultat = $validator->validate($product);
+
+        if ($resultat->count() > 0) {
+            dd('Il y a des erreurs : ', $resultat);
+        }
+
+        dd('Tout va bien');
+
         $product = $productRepository->find($id);
 
         $form = $this->createForm(ProductType::class, $product);
