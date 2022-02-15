@@ -4,6 +4,8 @@ namespace App\Form;
 
 use App\Entity\Category;
 use App\Entity\Product;
+use App\Form\DataTransformer\CentimesTransformer;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -30,6 +32,7 @@ class ProductType extends AbstractType
             ->add('price', MoneyType::class, [
                 'label' => 'Prix du produit',
                 'attr' => ['placeholder' => 'Taper le prix du produit en €'],
+                'divisor' => 100,
             ])
             ->add('mainPicture', UrlType::class, [
                 'label' => 'Image du produit',
@@ -45,11 +48,25 @@ class ProductType extends AbstractType
             ])
         ;
 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-            $form = $event->getForm();
+        // $builder->get('price')->addModelTransformer(new CentimesTransformer());
 
-            /** @var Product */
-            $product = $event->getData();
+        // $builder->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) {
+        //     $product = $event->getData();
+
+        //     if (null !== $product->getPrice()) {
+        //         $product->setPrice($product->getPrice() * 100);
+        //     }
+        // });
+
+        // $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+        //     $form = $event->getForm();
+
+        //     /** @var Product */
+        //     $product = $event->getData();
+
+        //     if (null !== $product->getPrice()) {
+        //         $product->setPrice($product->getPrice() / 100);
+        //     }
 
             // if (null === $product->getId()) {
             //     $form->add('category', EntityType::class, [
@@ -61,7 +78,7 @@ class ProductType extends AbstractType
             //         },
             //     ]);
             // }
-        });
+        // });
     }
 
     public function configureOptions(OptionsResolver $resolver): void
