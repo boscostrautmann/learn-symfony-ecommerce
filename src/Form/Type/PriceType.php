@@ -1,6 +1,6 @@
 <?php
 
-namespace App\From\Type;
+namespace App\Form\Type;
 
 use App\Form\DataTransformer\CentimesTransformer;
 use Symfony\Component\Form\AbstractType;
