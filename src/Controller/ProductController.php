@@ -79,19 +79,19 @@ class ProductController extends AbstractController
 
         // $resultat = $validator->validate($client, $collection);
 
-        $product = new Product();
-        $product
-            ->setName('Test')
-            ->setPrice(2000)
-        ;
+        // $product = new Product();
+        // $product
+        //     ->setName('Test')
+        //     ->setPrice(2000)
+        // ;
 
-        $resultat = $validator->validate($product);
+        // $resultat = $validator->validate($product);
 
-        if ($resultat->count() > 0) {
-            dd('Il y a des erreurs : ', $resultat);
-        }
+        // if ($resultat->count() > 0) {
+        //     dd('Il y a des erreurs : ', $resultat);
+        // }
 
-        dd('Tout va bien');
+        // dd('Tout va bien');
 
         $product = $productRepository->find($id);
 
@@ -101,7 +101,7 @@ class ProductController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $em->flush();
 
             $response = new Response();
@@ -132,7 +132,7 @@ class ProductController extends AbstractController
         $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $product->setSlug(strtolower($slugger->slug($product->getName())));
             $em->persist($product);
             $em->flush();

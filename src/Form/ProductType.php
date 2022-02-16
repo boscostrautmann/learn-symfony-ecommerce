@@ -24,6 +24,7 @@ class ProductType extends AbstractType
             ->add('name', TextType::class, [
                 'label' => 'Nom du produit',
                 'attr' => ['placeholder' => 'Taper le nom du produit'],
+                'required' => false,
             ])
             ->add('shortDescription', TextareaType::class, [
                 'label' => 'Description courte',
@@ -33,6 +34,7 @@ class ProductType extends AbstractType
                 'label' => 'Prix du produit',
                 'attr' => ['placeholder' => 'Taper le prix du produit en €'],
                 'divisor' => 100,
+                'required' => false,
             ])
             ->add('mainPicture', UrlType::class, [
                 'label' => 'Image du produit',
