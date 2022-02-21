@@ -29,16 +29,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', length: 255)]
     private $fullName;
 
-    #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Cetegory::class)]
-    private $cetegories;
-
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Category::class)]
     private $categories;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Purchase::class)]
+    private $purchases;
+
     public function __construct()
     {
-        $this->cetegories = new ArrayCollection();
         $this->categories = new ArrayCollection();
+        $this->purchases = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -124,36 +124,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, Cetegory>
-     */
-    public function getCetegories(): Collection
-    {
-        return $this->cetegories;
-    }
-
-    public function addCetegory(Cetegory $cetegory): self
-    {
-        if (!$this->cetegories->contains($cetegory)) {
-            $this->cetegories[] = $cetegory;
-            $cetegory->setOwner($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCetegory(Cetegory $cetegory): self
-    {
-        if ($this->cetegories->removeElement($cetegory)) {
-            // set the owning side to null (unless already changed)
-            if ($cetegory->getOwner() === $this) {
-                $cetegory->setOwner(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection<int, Category>
      */
     public function getCategories(): Collection
@@ -177,6 +147,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($category->getOwner() === $this) {
                 $category->setOwner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Purchase>
+     */
+    public function getPurchases(): Collection
+    {
+        return $this->purchases;
+    }
+
+    public function addPurchase(Purchase $purchase): self
+    {
+        if (!$this->purchases->contains($purchase)) {
+            $this->purchases[] = $purchase;
+            $purchase->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePurchase(Purchase $purchase): self
+    {
+        if ($this->purchases->removeElement($purchase)) {
+            // set the owning side to null (unless already changed)
+            if ($purchase->getUser() === $this) {
+                $purchase->setUser(null);
             }
         }
 
