@@ -4,36 +4,36 @@ namespace App\Controller\Purchase;
 
 use App\Cart\CartService;
 use App\Form\CartConfirmationType;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBag;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Security;
 
-class PurchaseConfirmationController
+class PurchaseConfirmationController extends AbstractController
 {
-    protected $formFactroy;
+    protected $formFactory;
     protected $router;
     protected $security;
     protected $cartService;
 
-    public function __construct(FormFactoryInterface $formFactroy, RouterInterface $router, Security $security, CartService $cartService)
+    public function __construct(FormFactoryInterface $formFactory, RouterInterface $router, Security $security, CartService $cartService)
     {
-        $this->formFactroy = $formFactroy;
+        $this->formFactory = $formFactory;
         $this->router = $router;
         $this->security = $security;
         $this->cartService = $cartService;
     }
 
     #[Route('/purchase/confirm', name: 'purchase_confirm')]
-    public function confirm(Request $request, FlashBag $flashBag)
+    public function confirm(Request $request)
     {
         // 1. Nous voulons lire les données du formulaires
         // FormFactoryInterface / Request
-        $form = $this->formFactroy->create(CartConfirmationType::class);
+        $form = $this->formFactory->create(CartConfirmationType::class);
 
         $form->handleRequest($request);
 
@@ -41,7 +41,7 @@ class PurchaseConfirmationController
 
         if (!$form->isSubmitted()) {
             // Message Flash puis redirection (FlashBagInterface)
-            $flashBag->add('warning', 'Vous devez remplir le formulaire de confirmation');
+            $this->addFlash('warning', 'Vous devez remplir le formulaire de confirmation');
 
             return new RedirectResponse($this->router->generate('cart_show'));
         }
@@ -57,7 +57,7 @@ class PurchaseConfirmationController
         $cartItem = $this->cartService->getDetailedCartItems();
 
         if (0 === count($cartItem)) {
-            $flashBag->add('warning', 'Vous ne pouvez pas confirmer une commande avec un panier vide');
+            $this->addFlash('warning', 'Vous ne pouvez pas confirmer une commande avec un panier vide');
 
             return new RedirectResponse($this->router->generate('cart_show'));
         }
