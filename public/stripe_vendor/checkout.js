@@ -1,13 +1,7 @@
       // This is your test publishable API key.
 const stripe = Stripe(stripePublicKey);
 
-// The items the customer wants to buy
-const items = [{ id: "xl-tshirt" }];
-
 let elements;
-
-initialize();
-checkStatus();
 
 document
   .querySelector("#payment-form")
@@ -15,16 +9,14 @@ document
 
 // Fetches a payment intent and captures the client secret
 async function initialize() {
-  const { clientSecret } = await fetch("/create.php", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ items }),
-  }).then((r) => r.json());
+      document
+        .querySelector("#payment-form")
+        .addEventListener("submit", handleSubmit);
 
-  elements = stripe.elements({ clientSecret });
-
-  const paymentElement = elements.create("payment");
-  paymentElement.mount("#payment-element");
+      // Fetches a payment intent and captures the client secret
+      elements = stripe.elements({ clientSecret });
+      const paymentElement = elements.create("payment");
+      paymentElement.mount("#payment-element");
 }
 
 async function handleSubmit(e) {
@@ -67,19 +59,22 @@ async function checkStatus() {
 
   switch (paymentIntent.status) {
     case "succeeded":
-      showMessage("Payment succeeded!");
+      console.log("Payment succeeded!");
       break;
     case "processing":
-      showMessage("Your payment is processing.");
+      console.log("Your payment is processing.");
       break;
     case "requires_payment_method":
-      showMessage("Your payment was not successful, please try again.");
+      console.log("Your payment was not successful, please try again.");
       break;
     default:
-      showMessage("Something went wrong.");
+      console.log("Something went wrong.");
       break;
   }
 }
+
+initialize();
+checkStatus();
 
 // ------- UI helpers -------
 

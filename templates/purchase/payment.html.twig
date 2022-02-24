@@ -20,10 +20,12 @@
 {% endblock %}
 
 {% block stylesheets %}
+	{{ parent() }}
 	<link rel="stylesheet" href="/stripe_vendor/checkout.css"/>
 {% endblock %}
 
 {% block javascripts %}
+	{{ parent() }}
 	<script src="https://js.stripe.com/v3/"></script>
 	<script>
 		const clientSecret = '{{ clientSecret }}';
