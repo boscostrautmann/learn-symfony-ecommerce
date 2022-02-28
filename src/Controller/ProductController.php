@@ -3,11 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Product;
+use App\Event\ProductViewEvent;
 use App\Form\ProductType;
 use App\Repository\CategoryRepository;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -21,7 +23,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class ProductController extends AbstractController
 {
     #[Route('/{slug}', name: 'product_category', priority: -1)]
-    public function category($slug, CategoryRepository $categoryRepository): Response
+    public function category($slug, CategoryRepository $categoryRepository)
     {
         $category = $categoryRepository->findOneBy([
             'slug' => $slug,
@@ -38,7 +40,7 @@ class ProductController extends AbstractController
     }
 
     #[Route('/{category_slug}/{slug}', name: 'product_show', priority: -1)]
-    public function show($slug, ProductRepository $productRepository, UrlGeneratorInterface $urlGenerator)
+    public function show($slug, ProductRepository $productRepository, UrlGeneratorInterface $urlGenerator, EventDispatcherInterface $dispatcher)
     {
         $product = $productRepository->findOneBy([
             'slug' => $slug,
@@ -47,6 +49,10 @@ class ProductController extends AbstractController
         if (!$product) {
             throw $this->createNotFoundException('Le produit demandé n\'existe pas');
         }
+
+        // Lancer un événement qui permet aux autre dévéloppeurs de réagir à la prise d'une commande
+        $productViewEvent = new ProductViewEvent($product);
+        $dispatcher->dispatch($productViewEvent, 'product.view');
 
         return $this->render('product/show.html.twig', [
             'product' => $product,
