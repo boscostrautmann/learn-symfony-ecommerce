@@ -37,7 +37,7 @@ class PurchasePersister
                 ->setProduct($cartItem->product)
                 ->setProductName($cartItem->product->getName())
                 ->setQuantity($cartItem->qty)
-                ->setTotal($this->cartService->getTotal())
+                ->setTotal($cartItem->getTotal())
                 ->setProductPrice($cartItem->product->getPrice())
             ;
 
