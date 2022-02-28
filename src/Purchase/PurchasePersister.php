@@ -5,7 +5,6 @@ namespace App\Purchase;
 use App\Cart\CartService;
 use App\Entity\Purchase;
 use App\Entity\PurchaseItem;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Security;
 
@@ -27,20 +26,14 @@ class PurchasePersister
         // Intégrer tout ce qu'il faut et persister la purchase
 
         // 6. Nous allons la lier avec l'utilisateur actuellement connecté (Security)
-        $purchase
-            ->setUser($this->security->getUser())
-            ->setPurchasedAt(new DateTime())
-            ->setTotal($this->cartService->getTotal())
-        ;
+        $purchase->setUser($this->security->getUser());
 
         $this->em->persist($purchase);
 
         // 7. Nous allons la lier avec les produits qui sont dans le panier (CartService)
         foreach ($this->cartService->getDetailedCartItems() as $cartItem) {
             $purchaseItem = new PurchaseItem();
-
-            $purchaseItem
-                ->setPurchase($purchase)
+            $purchaseItem->setPurchase($purchase)
                 ->setProduct($cartItem->product)
                 ->setProductName($cartItem->product->getName())
                 ->setQuantity($cartItem->qty)
