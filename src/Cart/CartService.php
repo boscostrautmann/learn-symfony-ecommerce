@@ -14,7 +14,7 @@ class CartService
     public function __construct(RequestStack $requestStack, ProductRepository $productRepository)
     {
         $this->requestStack = $requestStack;
-        $this->session = $this->requestStack->getSession();
+        // $this->session = $this->requestStack->getSession();
         $this->productRepository = $productRepository;
     }
 
@@ -113,11 +113,12 @@ class CartService
 
     protected function getCart(): array
     {
-        return $this->session->get('cart', []);
+        // return $this->session->get('cart', []);
+        return [];
     }
 
     protected function saveCart(array $cart)
     {
-        $this->session->set('cart', $cart);
+        // $this->session->set('cart', $cart);
     }
 }
