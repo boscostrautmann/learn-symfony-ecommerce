@@ -8,8 +8,7 @@ framework:
   # Remove or comment this section to explicitly disable session support.
   session:
     # ID of the service used for session storage.
-    handler_id: "session.handler.native_file"
-    save_path: "%kernel.project_dir%/var/sessions/%kernel.environment%"
+    handler_id: Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler
     cookie_secure: auto
     cookie_samesite: lax
     storage_factory_id: session.storage.factory.native

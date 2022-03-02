@@ -11,6 +11,15 @@ services:
     autowire: true # Automatically injects dependencies in your services.
     autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
+  # Store Sessions in a Relational Database (MariaDB, MySQL, PostgreSQL)
+  Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler:
+    arguments:
+      - "%env(DATABASE_URL)%"
+      # you can also use PDO configuration, but requires passing two arguments
+      # - 'mysql:dbname=mydatabase; host=myhost; port=myport'
+      # - { db_username: myuser, db_password: mypassword }
+      - { db_table: "sessions", db_id_col: "sess_id" }
+
   # makes classes in src/ available to be used as services
   # this creates a service per class whose id is the fully-qualified class name
   App\:
